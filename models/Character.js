@@ -4,9 +4,8 @@ import { Movies } from './Movies.js'
 
 const Character = sequelize.define('Characters', {
   _id: {
-    type: Sequelize.DataTypes.UUID,
-    defaultValue: Sequelize.DataTypes.UUID,
-    allowNull: false,
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.DataTypes.UUIDV1,
     primaryKey: true
   },
   image: Sequelize.DataTypes.STRING,

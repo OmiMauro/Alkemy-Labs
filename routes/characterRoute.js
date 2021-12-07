@@ -9,10 +9,6 @@ import {
 // method for verify authentication for access all routes
 
 const characterRouter = Router()
-characterRouter.get('/character', getCharacter)
-characterRouter.put('/character/:id', updateCharacter)
-characterRouter.post('/character', createCharacter)
-characterRouter.delete('/character/:id', deleteCharacter)
 
 characterRouter
   .route('/character')

@@ -11,7 +11,12 @@ const Movies = sequelize.define('Movies', {
   image: Sequelize.DataTypes.STRING,
   title: Sequelize.DataTypes.STRING,
   dateCreated: Sequelize.DataTypes.DATE,
-  rating: Sequelize.DataTypes.INTEGER,
+  rating: {
+    type: Sequelize.DataTypes.INTEGER,
+    validate: {
+      isIn: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]
+    }
+  },
   /* characters_fk: {
     type: Sequelize.DataTypes.UUIDV4,
     references: {

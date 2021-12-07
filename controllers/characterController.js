@@ -1,8 +1,8 @@
-import { where } from 'sequelize/dist'
+import sequelize from 'sequelize/dist/index.js'
 import { Character } from '../models/Character.js'
+const { where } = sequelize
 const createCharacter = async (req, res) => {
   const character = await Character.create(req.body)
-
   res.status(201).json({ character })
 }
 const updateCharacter = async (req, res) => {
@@ -23,8 +23,8 @@ const deleteCharacter = async (req, res) => {
   res.status(201).json({ character })
 }
 const getAllCharacters = async (req, res) => {
-  const characters = await Character.findAll({ attributes: [''] })
-  res.status(201).json({ characters })
+  const character = await Character.findAll()
+  res.status(200).json({ character })
 }
 export {
   createCharacter,
