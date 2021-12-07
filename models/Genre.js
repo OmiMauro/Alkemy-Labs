@@ -1,7 +1,7 @@
 import sequelize from '../db/database.js'
 import Sequelize from 'sequelize'
 
-const Movies = sequelize.define('Movies', {
+const Genre = sequelize.define('Genres', {
   _id: {
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.DataTypes.UUID,
@@ -9,16 +9,14 @@ const Movies = sequelize.define('Movies', {
     primaryKey: true
   },
   image: Sequelize.DataTypes.STRING,
-  title: Sequelize.DataTypes.STRING,
-  dateCreated: Sequelize.DataTypes.DATE,
-  rating: Sequelize.DataTypes.INTEGER,
-  /* characters_fk: {
-    type: Sequelize.DataTypes.UUIDV4,
+  name: Sequelize.DataTypes.STRING,
+  movies_fk: {
+    type: Sequelize.DataTypes.UUID,
     references: {
-      model: 'Characters',
+      model: 'Movies',
       key: '_id'
     }
-  } */
+  },
   createdAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW
@@ -28,4 +26,4 @@ const Movies = sequelize.define('Movies', {
     defaultValue: Sequelize.DataTypes.NOW
   }
 })
-export { Movies }
+export { Genre }
