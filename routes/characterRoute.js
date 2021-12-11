@@ -6,17 +6,21 @@ import {
   deleteCharacter,
   getAllCharacters
 } from '../controllers/characterController.js'
-// method for verify authentication for access all routes
 
+import { uploadFile } from '../services/uploadFiles.js'
+
+import { requireSignin } from '../controllers/authController.js'
 const characterRouter = Router()
 
 characterRouter
-  .route('/character')
+  .route('/')
+  .all(requireSignin)
   .get(getAllCharacters)
-  .post(createCharacter)
+  .post(uploadFile.single('image'), createCharacter)
 
 characterRouter
-  .route('/character/:id')
+  .route('/:id')
+  .all(requireSignin)
   .put(updateCharacter)
   .delete(deleteCharacter)
   .get(getCharacter)

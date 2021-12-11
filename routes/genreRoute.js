@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { requireSignin } from '../controllers/authController.js'
 // method for verify authentication for access all routes
 import {
   createGenre,
@@ -10,11 +11,13 @@ import {
 const genreRouter = Router()
 
 genreRouter
-  .route('/genre')
+  .route('/')
+  .all(requireSignin)
   .get(getAllGenres)
   .post(createGenre)
 genreRouter
-  .route('/genre/:id')
+  .route('/:id')
+  .all(requireSignin)
   .get(getGenre)
   .put(updateGenre)
   .delete(deleteGenre)

@@ -4,7 +4,7 @@ import Sequelize from 'sequelize'
 const Movies = sequelize.define('Movies', {
   _id: {
     type: Sequelize.DataTypes.UUID,
-    defaultValue: Sequelize.DataTypes.UUID,
+    defaultValue: Sequelize.DataTypes.UUIDV1,
     allowNull: false,
     primaryKey: true
   },
@@ -16,6 +16,12 @@ const Movies = sequelize.define('Movies', {
     validate: {
       isIn: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]
     }
+  },
+  createdBy: {
+    type: Sequelize.DataTypes.UUID
+  },
+  updatedBy: {
+    type: Sequelize.DataTypes.UUID
   },
   /* characters_fk: {
     type: Sequelize.DataTypes.UUIDV4,

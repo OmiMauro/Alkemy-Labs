@@ -20,6 +20,12 @@ const Character = sequelize.define('Characters', {
   updatedAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW
+  },
+  createdBy: {
+    type: Sequelize.DataTypes.UUID
+  },
+  updatedBy: {
+    type: Sequelize.DataTypes.UUID
   }
   /* movies_fk: {
     type: Sequelize.DataTypes.UUIDV4,

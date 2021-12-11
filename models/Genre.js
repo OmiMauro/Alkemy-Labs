@@ -4,7 +4,7 @@ import Sequelize from 'sequelize'
 const Genre = sequelize.define('Genres', {
   _id: {
     type: Sequelize.DataTypes.UUID,
-    defaultValue: Sequelize.DataTypes.UUID,
+    defaultValue: Sequelize.DataTypes.UUIDV1,
     allowNull: false,
     primaryKey: true
   },
@@ -24,6 +24,12 @@ const Genre = sequelize.define('Genres', {
   updatedAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW
+  },
+  createdBy: {
+    type: Sequelize.DataTypes.UUID
+  },
+  updatedBy: {
+    type: Sequelize.DataTypes.UUID
   }
 })
 export { Genre }

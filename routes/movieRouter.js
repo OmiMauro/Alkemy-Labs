@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { requireSignin } from '../controllers/authController.js'
 // method for verify authentication for access all routes
 import {
   createMovie,
@@ -10,11 +11,13 @@ import {
 const movieRouter = Router()
 
 movieRouter
-  .route('/movie')
+  .route('/')
+  .all(requireSignin)
   .get(getAllMovies)
   .post(createMovie)
 movieRouter
-  .route('/movie/:id')
+  .route('/:id')
+  .all(requireSignin)
   .get(getMovie)
   .put(updateMovie)
   .delete(deleteMovie)

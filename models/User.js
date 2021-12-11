@@ -4,7 +4,7 @@ import { hash } from 'bcrypt'
 const User = sequelize.define('Users', {
   _id: {
     type: Sequelize.DataTypes.UUID,
-    defaultValue: Sequelize.DataTypes.UUID,
+    defaultValue: Sequelize.DataTypes.UUIDV1,
     allowNull: false,
     primaryKey: true
   },
@@ -19,8 +19,8 @@ const User = sequelize.define('Users', {
   hashedPassword: {
     type: Sequelize.DataTypes.STRING,
     validate: {},
-    set (value) {
-      this.setDataValue('password', hash(value, process.env.SALT_ROUNDS))
+    set (pwd) {
+      this.setDataValue('password', hash(pwd, 9))
     }
   },
   createdAt: {
@@ -30,6 +30,12 @@ const User = sequelize.define('Users', {
   updatedAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW
+  },
+  createdBy: {
+    type: Sequelize.DataTypes.UUID
+  },
+  updatedBy: {
+    type: Sequelize.DataTypes.UUID
   }
 })
 export { User }

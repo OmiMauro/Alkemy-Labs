@@ -2,7 +2,18 @@ import sequelize from 'sequelize/dist/index.js'
 import { Character } from '../models/Character.js'
 const { where } = sequelize
 const createCharacter = async (req, res) => {
-  const character = await Character.create(req.body)
+  console.log(req.user)
+  const { name, dateBirth, weigth, history } = req.body
+  const { path } = req.file
+  // const { userId } = req.user
+  const character = await Character.create({
+    name,
+    dateBirth,
+    weigth,
+    history,
+    image: path
+    /* createdBy: userId */
+  })
   res.status(201).json({ character })
 }
 const updateCharacter = async (req, res) => {
@@ -24,6 +35,7 @@ const deleteCharacter = async (req, res) => {
 }
 const getAllCharacters = async (req, res) => {
   const character = await Character.findAll()
+  console.log(req.user)
   res.status(200).json({ character })
 }
 export {
