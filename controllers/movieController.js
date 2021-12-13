@@ -1,14 +1,36 @@
 import { Movies } from '../models/Movies.js'
 const createMovie = async (req, res) => {
-  const movie = await Movies.create(req.body)
+  const { userId } = req.user
+  const { path } = req.file
+  const { title, dateCreated, rating } = req.body
+  const movie = await Movies.create({
+    title,
+    dateCreated,
+    rating,
+    createdBy: userId,
+    image: path || ''
+  })
   res.status(201).json({ movie })
 }
 
 const updateMovie = async (req, res) => {
   const { id } = req.params
-  const movie = await Movies.update(req.body, {
-    where: { _id: id }
-  })
+  const { title, dateCreated, rating } = req.body
+  // const { path } = req.file
+  const { userId } = req.user
+
+  const movie = await Movies.update(
+    {
+      title,
+      dateCreated,
+      rating,
+      updatedBy: userId
+      // image: path || ''
+    },
+    {
+      where: { _id: id }
+    }
+  )
   res.stutus(201).json({ movie })
 }
 const getMovie = async (req, res) => {

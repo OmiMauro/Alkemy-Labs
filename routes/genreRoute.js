@@ -1,4 +1,6 @@
 import { Router } from 'express'
+import { uploadFile } from '../services/uploadFiles.js'
+
 import { requireSignin } from '../controllers/authController.js'
 // method for verify authentication for access all routes
 import {
@@ -14,7 +16,7 @@ genreRouter
   .route('/')
   .all(requireSignin)
   .get(getAllGenres)
-  .post(createGenre)
+  .post(uploadFile.single('image'), createGenre)
 genreRouter
   .route('/:id')
   .all(requireSignin)

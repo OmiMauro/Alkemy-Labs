@@ -1,14 +1,26 @@
 import { Genre } from '../models/Genre.js'
 const createGenre = async (req, res) => {
-  const genre = await Genre.create(req.body)
-
+  const { userId } = req.user
+  const { path } = req.file
+  const { name } = req.body
+  const genre = await Genre.create({
+    name,
+    createdBy: userId,
+    image: path
+  })
   res.status(201).json({ genre })
 }
 const updateGenre = async (req, res) => {
+  const { userId } = req.user
   const { id } = req.params
-  const genre = await Genre.update(req.body, {
-    where: { _id: id }
-  })
+  const { name } = req.body
+
+  const genre = await Genre.update(
+    { name, updatedBy: userId },
+    {
+      where: { _id: id }
+    }
+  )
   res.stutus(201).json({ genre })
 }
 const getGenre = async (req, res) => {

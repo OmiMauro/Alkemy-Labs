@@ -31,23 +31,16 @@ server.use('/api/v1/auth', authRouter)
 const connectDB = () => {
   try {
     sequelize.authenticate()
-
     sequelize.sync({
-      /*  force: true  */
+      force: true
     })
     console.log('Connect to DB')
   } catch (error) {
     console.log('Unable to connect to the database. ', error)
   }
 }
-const initServer = async () => {
-  try {
-    await connectDB()
-    server.listen(port, () => console.log('Runing in', port))
-  } catch (error) {
-    console.error(error)
-  }
-}
 
-initServer()
-export { connectDB, initServer }
+connectDB()
+const app = server.listen(port, () => console.log('Runing in', port))
+
+export { server, app }
