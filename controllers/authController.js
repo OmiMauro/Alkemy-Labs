@@ -2,6 +2,8 @@ import { User } from '../models/User.js'
 import bcrypt from 'bcrypt'
 import jsonwebtoken from 'jsonwebtoken'
 import expressJWT from 'express-jwt'
+import { transporter } from '../services/emails.js'
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body
   if (email && password) {
@@ -29,8 +31,21 @@ const registerUser = async (req, res) => {
     username,
     name
   })
+  if (user) {
+    const text = 'Register in Challenge Alkemy'
+    const from = process.env.EMAIL_MSG
+    const html = `<b>Your account ${email} was register succesfully in the server. Thanks for use us services. Great Day!</b>`
+    const mailData = {
+      from,
+      to: email,
+      subject: 'Signup in Challenge Alkemy',
+      text,
+      html
+    }
+    await transporter.sendMail(mailData)
+  }
   return res.status(201).json({
-    msg: 'The user was logged saccesfully',
+    msg: 'The user was register saccesfully',
     user: { email, username, name }
   })
 }

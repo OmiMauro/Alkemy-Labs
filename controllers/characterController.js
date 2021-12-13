@@ -1,6 +1,7 @@
 import sequelize from 'sequelize/dist/index.js'
 import { Character } from '../models/Character.js'
 const { where } = sequelize
+
 const createCharacter = async (req, res) => {
   const { name, dateBirth, weigth, history } = req.body
   const { path } = req.file
@@ -15,17 +16,24 @@ const createCharacter = async (req, res) => {
   })
   res.status(201).json({ character })
 }
+
 const updateCharacter = async (req, res) => {
   const { id } = req.params
   const { userId } = req.user
   const { name, dateBirth, weigth, history } = req.body
   const character = await Character.update(
-    { name, dateBirth, weigth, history, updatedBy: userId },
+    {
+      name,
+      dateBirth,
+      weigth,
+      history,
+      updatedBy: userId
+    },
     {
       where: { _id: id }
     }
   )
-  res.stutus(201).json({ character })
+  res.status(201).json({ character })
 }
 const getCharacter = async (req, res) => {
   const { id } = req.params
