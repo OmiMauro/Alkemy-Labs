@@ -53,7 +53,8 @@ const getAllCharacters = async (req, res) => {
   if (name) queryObj.name = { [Op.regexp]: name }
   if (weigth) queryObj.weigth = weigth
   if (age) {
-    const date = moment().diff(age)
+    const date = moment().add(-age, 'year')
+    console.log(date)
     queryObj.dateBirth = { [Op.gte]: date }
   }
   const character = await Character.findAll(

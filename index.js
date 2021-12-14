@@ -31,9 +31,9 @@ server.use('/api/v1/auth', authRouter)
 const connectDB = () => {
   try {
     sequelize.authenticate()
-    sequelize.sync({
-      force: true
-    })
+    /*  sequelize.sync({
+        force: true
+    }) */
     console.log('Connect to DB')
   } catch (error) {
     console.log('Unable to connect to the database. ', error)
