@@ -1,6 +1,9 @@
 import sequelize from '../db/database.js'
 import Sequelize from 'sequelize'
 import { hash } from 'bcrypt'
+import { Movies } from './Movies.js'
+import { Genre } from './Genre.js'
+import { Character } from './Character.js'
 const User = sequelize.define('Users', {
   _id: {
     type: Sequelize.DataTypes.UUID,
@@ -38,4 +41,8 @@ const User = sequelize.define('Users', {
     type: Sequelize.DataTypes.UUID
   }
 })
+User.hasMany(Movies, { foreignKey: 'createdBy' })
+User.hasMany(Genre)
+User.hasMany(Character)
+
 export { User }

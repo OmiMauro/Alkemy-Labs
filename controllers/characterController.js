@@ -1,6 +1,7 @@
 import sequelize from 'sequelize/dist/index.js'
+import moment from 'moment'
 import { Character } from '../models/Character.js'
-const { where } = sequelize
+const { where, Op } = sequelize
 
 const createCharacter = async (req, res) => {
   const { name, dateBirth, weigth, history } = req.body
@@ -37,7 +38,7 @@ const updateCharacter = async (req, res) => {
 }
 const getCharacter = async (req, res) => {
   const { id } = req.params
-  const character = await Character.findByPk(id)
+  const character = await Character.findByPk(id, {})
   res.status(200).json({ character })
 }
 const deleteCharacter = async (req, res) => {
@@ -46,7 +47,19 @@ const deleteCharacter = async (req, res) => {
   res.status(201).json({ character })
 }
 const getAllCharacters = async (req, res) => {
-  const character = await Character.findAll()
+  const { name, age, weigth, movies } = req.query
+  const queryObj = {}
+
+  if (name) queryObj.name = { [Op.regexp]: name }
+  if (weigth) queryObj.weigth = weigth
+  if (age) {
+    const date = moment().diff(age)
+    queryObj.dateBirth = { [Op.gte]: date }
+  }
+  const character = await Character.findAll(
+    { where: queryObj },
+    { atributtes: ['name', 'image'] }
+  )
   res.status(200).json({ character })
 }
 export {

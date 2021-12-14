@@ -1,7 +1,7 @@
 import sequelize from '../db/database.js'
 import Sequelize from 'sequelize'
 import { Movies } from './Movies.js'
-
+import moment from 'moment'
 const Character = sequelize.define('Characters', {
   _id: {
     type: Sequelize.UUID,
@@ -10,7 +10,14 @@ const Character = sequelize.define('Characters', {
   },
   image: Sequelize.DataTypes.STRING,
   name: Sequelize.DataTypes.STRING,
-  dateBirth: Sequelize.DataTypes.DATE,
+  dateBirth: {
+    type: Sequelize.DataTypes.DATE
+    /*  get: function () {
+      const dateBirth = this.getDataValue('dateBirth')
+      const age = moment().diff(dateBirth, 'years')
+      return age
+    } */
+  },
   weigth: Sequelize.DataTypes.FLOAT,
   history: Sequelize.DataTypes.STRING,
   createdAt: {
@@ -35,7 +42,5 @@ const Character = sequelize.define('Characters', {
     }
   } */
 })
-Character.belongsToMany(Movies, { through: 'Character_Movies' })
-Movies.belongsToMany(Character, { through: 'Character_Movies' })
-
+// Character.belongsToMany(Movies, { through: 'Character_Movies' })
 export { Character }

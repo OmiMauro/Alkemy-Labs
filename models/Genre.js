@@ -1,5 +1,6 @@
 import sequelize from '../db/database.js'
 import Sequelize from 'sequelize'
+import { Movies } from './Movies.js'
 
 const Genre = sequelize.define('Genres', {
   _id: {
@@ -32,4 +33,5 @@ const Genre = sequelize.define('Genres', {
     type: Sequelize.DataTypes.UUID
   }
 })
+// Genre.hasMany(Movies)
 export { Genre }
