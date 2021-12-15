@@ -1,6 +1,5 @@
 import sequelize from '../db/database.js'
 import Sequelize from 'sequelize'
-import { Character } from './Character.js'
 
 const Movies = sequelize.define('Movies', {
   _id: {
@@ -15,22 +14,36 @@ const Movies = sequelize.define('Movies', {
   rating: {
     type: Sequelize.DataTypes.ENUM,
     values: ['1', '2', '3', '4', '5'],
-    defaultValue: '5',
-    allowNull: false
+    defaultValue: '4'
   },
   createdBy: {
-    type: Sequelize.DataTypes.UUID
+    type: Sequelize.DataTypes.UUID,
+    references: {
+      model: 'Users',
+      key: '_id'
+    }
   },
   updatedBy: {
-    type: Sequelize.DataTypes.UUID
+    type: Sequelize.DataTypes.UUID,
+    references: {
+      model: 'Users',
+      key: '_id'
+    }
   },
   /* characters_fk: {
-    type: Sequelize.DataTypes.UUIDV4,
+    type: Sequelize.DataTypes.UUID,
     references: {
       model: 'Characters',
       key: '_id'
     }
-  } */
+  }, */
+  genres_fk: {
+    type: Sequelize.DataTypes.UUID,
+    references: {
+      model: 'Genres',
+      key: '_id'
+    }
+  },
   createdAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW
@@ -40,6 +53,4 @@ const Movies = sequelize.define('Movies', {
     defaultValue: Sequelize.DataTypes.NOW
   }
 })
-Movies.belongsToMany(Character, { through: 'Character_Movies' })
-
 export { Movies }

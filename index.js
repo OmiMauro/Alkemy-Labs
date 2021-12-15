@@ -23,7 +23,7 @@ server.use(cors())
 server.use(morgan('dev'))
 server.use('/public', express.static('./public'))
 // Define routes of API
-server.use('/api/v1/character', characterRouter)
+server.use('/api/v1/characters', characterRouter)
 server.use('/api/v1/genres', genreRouter)
 server.use('/api/v1/movies', movieRouter)
 server.use('/api/v1/auth', authRouter)
@@ -31,9 +31,9 @@ server.use('/api/v1/auth', authRouter)
 const connectDB = () => {
   try {
     sequelize.authenticate()
-    /*  sequelize.sync({
-        force: true
-    }) */
+    sequelize.sync({
+      /* force: true */
+    })
     console.log('Connect to DB')
   } catch (error) {
     console.log('Unable to connect to the database. ', error)

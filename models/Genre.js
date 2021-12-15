@@ -1,7 +1,5 @@
 import sequelize from '../db/database.js'
 import Sequelize from 'sequelize'
-import { Movies } from './Movies.js'
-
 const Genre = sequelize.define('Genres', {
   _id: {
     type: Sequelize.DataTypes.UUID,
@@ -11,13 +9,13 @@ const Genre = sequelize.define('Genres', {
   },
   image: Sequelize.DataTypes.STRING,
   name: Sequelize.DataTypes.STRING,
-  movies_fk: {
+  /* movies_fk: {
     type: Sequelize.DataTypes.UUID,
     references: {
       model: 'Movies',
       key: '_id'
     }
-  },
+  }, */
   createdAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW
@@ -27,11 +25,18 @@ const Genre = sequelize.define('Genres', {
     defaultValue: Sequelize.DataTypes.NOW
   },
   createdBy: {
-    type: Sequelize.DataTypes.UUID
+    type: Sequelize.DataTypes.UUID,
+    references: {
+      model: 'Users',
+      key: '_id'
+    }
   },
   updatedBy: {
-    type: Sequelize.DataTypes.UUID
+    type: Sequelize.DataTypes.UUID,
+    references: {
+      model: 'Users',
+      key: '_id'
+    }
   }
 })
-// Genre.hasMany(Movies)
 export { Genre }

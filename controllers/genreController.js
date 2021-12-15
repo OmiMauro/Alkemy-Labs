@@ -1,11 +1,12 @@
 import { Genre } from '../models/Genre.js'
 const createGenre = async (req, res) => {
-  const { userId } = req.user
+  console.log(req.user)
+  const { userId: createdBy } = req.user
   const { path } = req.file
   const { name } = req.body
   const genre = await Genre.create({
     name,
-    createdBy: userId,
+    createdBy,
     image: path
   })
   res.status(201).json({ genre })
@@ -34,7 +35,7 @@ const deleteGenre = async (req, res) => {
   res.status(201).json({ genre })
 }
 const getAllGenres = async (req, res) => {
-  const genres = await Genre.findAll({ attributes: [''] })
+  const genres = await Genre.findAll({ include: { all: true, nested: true } })
   res.status(201).json({ genres })
 }
 export { createGenre, updateGenre, getGenre, deleteGenre, getAllGenres }

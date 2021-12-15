@@ -4,7 +4,7 @@ import { Character } from '../models/Character.js'
 const { where, Op } = sequelize
 
 const createCharacter = async (req, res) => {
-  const { name, dateBirth, weigth, history } = req.body
+  const { name, dateBirth, weigth, history, movies_fk } = req.body
   const { path } = req.file
   const { userId } = req.user
   const character = await Character.create({
@@ -21,14 +21,15 @@ const createCharacter = async (req, res) => {
 const updateCharacter = async (req, res) => {
   const { id } = req.params
   const { userId } = req.user
-  const { name, dateBirth, weigth, history } = req.body
+  const { name, dateBirth, weigth, history, movies_fk } = req.body
   const character = await Character.update(
     {
       name,
       dateBirth,
       weigth,
       history,
-      updatedBy: userId
+      updatedBy: userId,
+      movies_fk
     },
     {
       where: { _id: id }
@@ -38,7 +39,9 @@ const updateCharacter = async (req, res) => {
 }
 const getCharacter = async (req, res) => {
   const { id } = req.params
-  const character = await Character.findByPk(id, {})
+  const character = await Character.findByPk(id, {
+    include: { all: true, nested: true }
+  })
   res.status(200).json({ character })
 }
 const deleteCharacter = async (req, res) => {
@@ -54,7 +57,6 @@ const getAllCharacters = async (req, res) => {
   if (weigth) queryObj.weigth = weigth
   if (age) {
     const date = moment().add(-age, 'year')
-    console.log(date)
     queryObj.dateBirth = { [Op.gte]: date }
   }
   const character = await Character.findAll(
