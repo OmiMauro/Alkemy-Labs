@@ -23,25 +23,25 @@ const Character = sequelize.define('Characters', {
     defaultValue: Sequelize.DataTypes.NOW
   },
   createdBy: {
+    type: Sequelize.DataTypes.UUID
+    /*  references: {
+      model: 'Users',
+      key: '_id'
+    } */
+  }
+  /* updatedBy: {
     type: Sequelize.DataTypes.UUID,
     references: {
       model: 'Users',
       key: '_id'
     }
-  },
-  updatedBy: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
-      model: 'Users',
-      key: '_id'
-    }
-  },
-  movies_fk: {
+  } */
+  /* movies_fk: {
     type: Sequelize.DataTypes.UUID,
     references: {
       model: 'Movies',
       key: '_id'
     }
-  }
+  } */
 })
 export { Character }

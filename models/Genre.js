@@ -25,18 +25,18 @@ const Genre = sequelize.define('Genres', {
     defaultValue: Sequelize.DataTypes.NOW
   },
   createdBy: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
+    type: Sequelize.DataTypes.UUID
+    /*  references: {
       model: 'Users',
       key: '_id'
-    }
-  },
+    } */
+  } /* ,
   updatedBy: {
     type: Sequelize.DataTypes.UUID,
     references: {
       model: 'Users',
       key: '_id'
     }
-  }
+  } */
 })
 export { Genre }

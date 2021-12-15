@@ -8,7 +8,8 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body
   if (email && password) {
     const user = await User.findOne({ where: { email } })
-    if (!(user && comparePassword(password, user.hashedPassword))) {
+
+    if (!(user && (await bcrypt.compare(password, user.hashedPassword)))) {
       return res
         .status(404)
         .json({ error: 'The email or password wrong. Please try only time' })
@@ -25,9 +26,10 @@ const loginUser = async (req, res) => {
 }
 const registerUser = async (req, res) => {
   const { email, password, username, name } = req.body
+  const hashedPassword = await bcrypt.hash(password, 9)
   const user = await User.create({
     email,
-    hashedPassword: password,
+    hashedPassword,
     username,
     name
   })

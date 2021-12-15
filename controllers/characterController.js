@@ -6,21 +6,21 @@ const { where, Op } = sequelize
 const createCharacter = async (req, res) => {
   const { name, dateBirth, weigth, history, movies_fk } = req.body
   const { path } = req.file
-  const { userId } = req.user
+  const { userId: createdBy } = req.user
   const character = await Character.create({
     name,
     dateBirth,
     weigth,
     history,
     image: path,
-    createdBy: userId
+    createdBy
   })
   res.status(201).json({ character })
 }
 
 const updateCharacter = async (req, res) => {
   const { id } = req.params
-  const { userId } = req.user
+  const { userId: updatedBy } = req.user
   const { name, dateBirth, weigth, history, movies_fk } = req.body
   const character = await Character.update(
     {
@@ -28,7 +28,7 @@ const updateCharacter = async (req, res) => {
       dateBirth,
       weigth,
       history,
-      updatedBy: userId,
+      updatedBy,
       movies_fk
     },
     {

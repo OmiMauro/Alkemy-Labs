@@ -17,19 +17,19 @@ const Movies = sequelize.define('Movies', {
     defaultValue: '4'
   },
   createdBy: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
+    type: Sequelize.DataTypes.UUID
+    /* references: {
       model: 'Users',
       key: '_id'
-    }
-  },
+    } */
+  } /* ,
   updatedBy: {
     type: Sequelize.DataTypes.UUID,
     references: {
       model: 'Users',
       key: '_id'
     }
-  },
+  }, */,
   /* characters_fk: {
     type: Sequelize.DataTypes.UUID,
     references: {
@@ -38,11 +38,11 @@ const Movies = sequelize.define('Movies', {
     }
   }, */
   genres_fk: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
+    type: Sequelize.DataTypes.UUID
+    /* references: {
       model: 'Genres',
       key: '_id'
-    }
+    } */
   },
   createdAt: {
     type: Sequelize.DataTypes.DATE,

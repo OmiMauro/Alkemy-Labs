@@ -18,11 +18,11 @@ const User = sequelize.define('Users', {
     }
   },
   hashedPassword: {
-    type: Sequelize.DataTypes.STRING,
-    validate: {},
+    type: Sequelize.DataTypes.STRING
+    /* validate: {},
     set (pwd) {
       this.setDataValue('password', hash(pwd, 9))
-    }
+    } */
   },
   createdAt: {
     type: Sequelize.DataTypes.DATE,

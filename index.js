@@ -7,7 +7,7 @@ import morgan from 'morgan'
 import { Movies } from './models/Movies.js'
 import { User } from './models/User.js'
 import { Genre } from './models/Genre.js' */
-
+import { Character, Genre, Movies, User } from './models/index.js'
 // Routes of server
 import { genreRouter } from './routes/genreRoute.js'
 import { characterRouter } from './routes/characterRoute.js'

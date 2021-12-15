@@ -17,7 +17,7 @@ const updateGenre = async (req, res) => {
   const { name } = req.body
 
   const genre = await Genre.update(
-    { name, updatedBy: userId },
+    { name, updatedBy: `${userId}` },
     {
       where: { _id: id }
     }
