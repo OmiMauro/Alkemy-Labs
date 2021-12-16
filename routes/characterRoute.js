@@ -4,7 +4,8 @@ import {
   updateCharacter,
   getCharacter,
   deleteCharacter,
-  getAllCharacters
+  getAllCharacters,
+  updateCharacterAndMovie
 } from '../controllers/characterController.js'
 
 import { uploadFile } from '../services/uploadFiles.js'
@@ -24,5 +25,8 @@ characterRouter
   .put(updateCharacter)
   .delete(deleteCharacter)
   .get(getCharacter)
-
+characterRouter
+  .route('/:characterId/movies/:movieId')
+  .all(requireSignin)
+  .put(updateCharacterAndMovie)
 export { characterRouter }

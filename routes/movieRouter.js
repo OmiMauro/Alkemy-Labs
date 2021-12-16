@@ -8,7 +8,8 @@ import {
   updateMovie,
   getMovie,
   deleteMovie,
-  getAllMovies
+  getAllMovies,
+  updateMovieAndCharacter
 } from '../controllers/movieController.js'
 const movieRouter = Router()
 
@@ -23,5 +24,8 @@ movieRouter
   .get(getMovie)
   .put(updateMovie)
   .delete(deleteMovie)
-
+movieRouter
+  .route('/:movieId/movies/:characterId')
+  .all(requireSignin)
+  .put(updateMovieAndCharacter)
 export { movieRouter }

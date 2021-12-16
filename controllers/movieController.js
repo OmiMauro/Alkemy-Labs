@@ -5,7 +5,7 @@ import { Character } from '../models/Character.js'
 const createMovie = async (req, res) => {
   const { userId: createdBy } = req.user
   const { path } = req.file
-  const { title, dateCreated, rating, genres_fk, character_id } = req.body
+  const { title, dateCreated, rating, genres_fk } = req.body
   const movie = await Movies.create({
     title,
     dateCreated,
@@ -14,17 +14,13 @@ const createMovie = async (req, res) => {
     image: path || '',
     genres_fk
   })
-  if (character_id) {
-    const character = await Character.findByPk(character_id)
-    const result = await movie.setCharacters(character)
-    console.log(result)
-  }
   res.status(201).json({ movie })
 }
 
 const updateMovie = async (req, res) => {
   const { id } = req.params
-  const { title, dateCreated, rating, genres_fk, character_id } = req.body
+  const movieUpdate = {}
+  const { title, dateCreated, rating, genres_fk } = req.body
   // const { path: image } = req.file
   const { userId: updatedBy } = req.user
   const movie = await Movies.update(
@@ -40,12 +36,8 @@ const updateMovie = async (req, res) => {
       where: { _id: id }
     }
   )
-  if (character_id) {
-    const character = await Character.findByPk(character_id)
-    const result = await movie.setCharacters(character)
-    console.log(result)
-  }
-  res.status(201).json({ movie })
+
+  res.status(201).json({ movie, movieUpdate })
 }
 const getMovie = async (req, res) => {
   const { id } = req.params
@@ -63,5 +55,19 @@ const getAllMovies = async (req, res) => {
   })
   res.status(201).json({ movies })
 }
+const updateMovieAndCharacter = async (req, res) => {
+  const { characterId, movieId } = req.params
+  const character = await Character.findByPk(characterId)
+  const movieFind = await Movies.findByPk(movieId)
+  const movie = await movieFind.setCharacters(character)
+  res.status(201).json({ movie })
+}
 
-export { createMovie, updateMovie, getMovie, deleteMovie, getAllMovies }
+export {
+  createMovie,
+  updateMovie,
+  getMovie,
+  deleteMovie,
+  getAllMovies,
+  updateMovieAndCharacter
+}

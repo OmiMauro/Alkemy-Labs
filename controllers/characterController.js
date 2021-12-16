@@ -1,6 +1,7 @@
 import sequelize from 'sequelize/dist/index.js'
 import moment from 'moment'
 import { Character } from '../models/Character.js'
+import { Movies } from '../models/Movies.js'
 const { where, Op } = sequelize
 
 const createCharacter = async (req, res) => {
@@ -61,15 +62,24 @@ const getAllCharacters = async (req, res) => {
     queryObj.dateBirth = { [Op.gte]: date }
   }
   const character = await Character.findAll(
+    { include: 'Movies' },
     { where: queryObj },
     { atributtes: ['name', 'image'] }
   )
   res.status(200).json({ character })
+}
+const updateCharacterAndMovie = async (req, res) => {
+  const { characterId, movieId } = req.params
+  const characterFind = await Character.findByPk(characterId)
+  const movieFind = await Movies.findByPk(movieId)
+  const character = await characterFind.setMovies(movieFind)
+  res.status(201).json({ character })
 }
 export {
   createCharacter,
   updateCharacter,
   getCharacter,
   getAllCharacters,
-  deleteCharacter
+  deleteCharacter,
+  updateCharacterAndMovie
 }
