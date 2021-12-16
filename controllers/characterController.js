@@ -37,6 +37,7 @@ const updateCharacter = async (req, res) => {
   )
   res.status(201).json({ character })
 }
+
 const getCharacter = async (req, res) => {
   const { id } = req.params
   const character = await Character.findByPk(id, {

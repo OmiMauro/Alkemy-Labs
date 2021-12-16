@@ -1,10 +1,11 @@
 import { Movies } from '../models/Movies.js'
 import { Genre } from '../models/Genre.js'
+import { Character } from '../models/Character.js'
 
 const createMovie = async (req, res) => {
   const { userId: createdBy } = req.user
   const { path } = req.file
-  const { title, dateCreated, rating, genres_fk } = req.body
+  const { title, dateCreated, rating, genres_fk, character_id } = req.body
   const movie = await Movies.create({
     title,
     dateCreated,
@@ -13,12 +14,17 @@ const createMovie = async (req, res) => {
     image: path || '',
     genres_fk
   })
+  if (character_id) {
+    const character = await Character.findByPk(character_id)
+    const result = await movie.setCharacters(character)
+    console.log(result)
+  }
   res.status(201).json({ movie })
 }
 
 const updateMovie = async (req, res) => {
   const { id } = req.params
-  const { title, dateCreated, rating, genres_fk } = req.body
+  const { title, dateCreated, rating, genres_fk, character_id } = req.body
   // const { path: image } = req.file
   const { userId: updatedBy } = req.user
   const movie = await Movies.update(
@@ -34,6 +40,11 @@ const updateMovie = async (req, res) => {
       where: { _id: id }
     }
   )
+  if (character_id) {
+    const character = await Character.findByPk(character_id)
+    const result = await movie.setCharacters(character)
+    console.log(result)
+  }
   res.status(201).json({ movie })
 }
 const getMovie = async (req, res) => {
@@ -48,8 +59,9 @@ const deleteMovie = async (req, res) => {
 }
 const getAllMovies = async (req, res) => {
   const movies = await Movies.findAll({
-    include: 'Genres'
+    include: 'Characters'
   })
   res.status(201).json({ movies })
 }
+
 export { createMovie, updateMovie, getMovie, deleteMovie, getAllMovies }
