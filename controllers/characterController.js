@@ -5,7 +5,7 @@ import { Movies } from '../models/Movies.js'
 const { where, Op } = sequelize
 
 const createCharacter = async (req, res) => {
-  const { name, dateBirth, weigth, history, movies_fk } = req.body
+  const { name, dateBirth, weigth, history } = req.body
   const { path } = req.file
   const { userId: createdBy } = req.user
   const character = await Character.create({
@@ -22,15 +22,14 @@ const createCharacter = async (req, res) => {
 const updateCharacter = async (req, res) => {
   const { id } = req.params
   const { userId: updatedBy } = req.user
-  const { name, dateBirth, weigth, history, movies_fk } = req.body
+  const { name, dateBirth, weigth, history } = req.body
   const character = await Character.update(
     {
       name,
       dateBirth,
       weigth,
       history,
-      updatedBy,
-      movies_fk
+      updatedBy
     },
     {
       where: { _id: id }
@@ -54,7 +53,7 @@ const deleteCharacter = async (req, res) => {
 const getAllCharacters = async (req, res) => {
   const { name, age, weigth, movies } = req.query
   const queryObj = {}
-  let include = {}
+
   if (name) queryObj.name = { [Op.regexp]: name }
   if (weigth) queryObj.weigth = weigth
   if (age) {
@@ -62,11 +61,15 @@ const getAllCharacters = async (req, res) => {
     queryObj.dateBirth = { [Op.gte]: date }
   }
   if (movies) {
-    include = [{ model: Movies, as: 'Movies', where: { _id: movies } }]
+    const include = [{ model: Movies, as: 'Movies', where: { _id: movies } }]
+    const character = await Character.findAll(
+      { include },
+      { where: queryObj },
+      { atributtes: ['name', 'image'] }
+    )
+    return res.status(200).json({ character })
   }
-
   const character = await Character.findAll(
-    { include },
     { where: queryObj },
     { atributtes: ['name', 'image'] }
   )

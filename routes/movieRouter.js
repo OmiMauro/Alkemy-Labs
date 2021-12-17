@@ -25,7 +25,7 @@ movieRouter
   .put(updateMovie)
   .delete(deleteMovie)
 movieRouter
-  .route('/:movieId/movies/:characterId')
+  .route('/:movieId/character/:characterId')
   .all(requireSignin)
   .put(updateMovieAndCharacter)
 export { movieRouter }

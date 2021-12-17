@@ -20,7 +20,9 @@ const loginUser = async (req, res) => {
       username: user.username,
       userId: user._id
     }
-    const token = await jsonwebtoken.sign(payload, process.env.SECRET_KEY)
+    const token = await jsonwebtoken.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: '2d'
+    })
     res.status(200).json({ msg: 'The login was logged saccesfully', token })
   }
 }

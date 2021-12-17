@@ -39,7 +39,7 @@ const updateMovie = async (req, res) => {
     }
   )
 
-  res.status(201).json({ movie, movieUpdate })
+  res.status(201).json({ movie })
 }
 const getMovie = async (req, res) => {
   const { id } = req.params
