@@ -1,7 +1,9 @@
 import { Movies } from '../models/Movies.js'
 import { Genre } from '../models/Genre.js'
 import { Character } from '../models/Character.js'
+import sequelize from 'sequelize/dist/index.js'
 
+const { where, Op } = sequelize
 const createMovie = async (req, res) => {
   const { userId: createdBy } = req.user
   const { path } = req.file
@@ -41,7 +43,9 @@ const updateMovie = async (req, res) => {
 }
 const getMovie = async (req, res) => {
   const { id } = req.params
-  const movie = await Movies.findByPk(id)
+  const movie = await Movies.findByPk(id, {
+    include: 'Characters'
+  })
   res.status(201).json({ movie })
 }
 const deleteMovie = async (req, res) => {
@@ -50,8 +54,16 @@ const deleteMovie = async (req, res) => {
   res.status(201).json({ movie })
 }
 const getAllMovies = async (req, res) => {
+  const { title, genre, order } = req.query
+  const queryObj = {}
+  let orderParams = ['createdAt', 'DESC']
+  if (title) queryObj.title = { [Op.regexp]: title }
+  if (genre) queryObj.genre = { [Op.eq]: genre }
+  if (order) orderParams = ['dateCreated', order]
   const movies = await Movies.findAll({
-    include: 'Characters'
+    atributtes: ['title', 'image', 'dateCreated'],
+    where: queryObj,
+    order: [orderParams]
   })
   res.status(201).json({ movies })
 }
