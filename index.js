@@ -3,6 +3,10 @@ import express from 'express'
 import sequelize from './db/database.js'
 import cors from 'cors'
 import morgan from 'morgan'
+import 'express-async-errors'
+
+// middleware of app
+import { errorHandlerMiddleware } from './middlewares/error-handler.js'
 /* import { Character } from './models/Character.js'
 import { Movies } from './models/Movies.js'
 import { User } from './models/User.js'
@@ -28,6 +32,7 @@ server.use('/api/v1/genres', genreRouter)
 server.use('/api/v1/movies', movieRouter)
 server.use('/api/v1/auth', authRouter)
 
+server.use(errorHandlerMiddleware)
 const connectDB = () => {
   try {
     sequelize.authenticate()

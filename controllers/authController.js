@@ -3,16 +3,16 @@ import bcrypt from 'bcrypt'
 import jsonwebtoken from 'jsonwebtoken'
 import expressJWT from 'express-jwt'
 import { transporter } from '../services/emails.js'
-
+import { Unauthenticated } from '../errors/unauthenticated.js'
 const loginUser = async (req, res) => {
   const { email, password } = req.body
   if (email && password) {
     const user = await User.findOne({ where: { email } })
-
     if (!(user && (await bcrypt.compare(password, user.hashedPassword)))) {
-      return res
+      throw new Unauthenticated('The email or password wrong')
+      /*  return res
         .status(404)
-        .json({ error: 'The email or password wrong. Please try only time' })
+        .json({ error: 'The email or password wrong. Please try only time' }) */
     }
     const payload = {
       email: user.email,
@@ -56,12 +56,13 @@ const logout = (req, res) => {
   res.clearCookie('t')
   res.json({ msg: 'A cerrado su sesion' })
 }
-const comparePassword = async (password, hashedPassword) => {
-  return await bcrypt.compare(password, hashedPassword)
+const tokenRevoked = (req, payload, done) => {
+  done(new Unauthenticated('error in token'))
 }
-
 const requireSignin = expressJWT({
   algorithms: ['HS256'],
   secret: process.env.SECRET_KEY
+  /* isRevoked: tokenRevoked */
 })
+
 export { loginUser, registerUser, logout, requireSignin }
