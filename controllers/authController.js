@@ -8,7 +8,6 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body
   if (email && password) {
     const user = await User.findOne({ where: { email } })
-
     if (!(user && (await bcrypt.compare(password, user.hashedPassword)))) {
       return res
         .status(404)
@@ -23,11 +22,18 @@ const loginUser = async (req, res) => {
     const token = await jsonwebtoken.sign(payload, process.env.SECRET_KEY, {
       expiresIn: '2d'
     })
-    res.status(200).json({ msg: 'The login was logged saccesfully', token })
+    res.status(201).json({ msg: 'The user was logged saccesfully', token })
   }
 }
 const registerUser = async (req, res) => {
   const { email, password, username, name } = req.body
+  const findUser = await User.findOne({ where: { email } })
+  if (findUser) {
+    return res.status(201).json({
+      msg: 'The email is register. Please only login',
+      user: { email, username: findUser.username, name: findUser.name }
+    })
+  }
   const hashedPassword = await bcrypt.hash(password, 9)
   const user = await User.create({
     email,

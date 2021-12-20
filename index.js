@@ -3,10 +3,7 @@ import express from 'express'
 import sequelize from './db/database.js'
 import cors from 'cors'
 import morgan from 'morgan'
-/* import { Character } from './models/Character.js'
-import { Movies } from './models/Movies.js'
-import { User } from './models/User.js'
-import { Genre } from './models/Genre.js' */
+
 import { Character, Genre, Movies, User } from './models/index.js'
 // Routes of server
 import { genreRouter } from './routes/genreRoute.js'
@@ -31,9 +28,8 @@ server.use('/api/v1/auth', authRouter)
 const connectDB = () => {
   try {
     sequelize.authenticate()
-    sequelize.sync({
-      /* force: true */
-    })
+    const force = process.env.NODE_ENV === 'test'
+    sequelize.sync({})
     console.log('Connect to DB')
   } catch (error) {
     console.log('Unable to connect to the database. ', error)
@@ -42,5 +38,4 @@ const connectDB = () => {
 
 connectDB()
 const app = server.listen(port, () => console.log('Runing in', port))
-
 export { server, app }

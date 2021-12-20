@@ -6,6 +6,7 @@ const { where, Op } = sequelize
 
 const createCharacter = async (req, res) => {
   const { name, dateBirth, weigth, history } = req.body
+  console.log(req.file)
   const { path } = req.file
   const { userId: createdBy } = req.user
   const character = await Character.create({
@@ -48,7 +49,7 @@ const getCharacter = async (req, res) => {
 const deleteCharacter = async (req, res) => {
   const { id } = req.params
   const character = await Character.destroy({ where: { _id: id } })
-  res.status(201).json({ character })
+  res.status(200).json({ character })
 }
 const getAllCharacters = async (req, res) => {
   const { name, age, weigth, movies } = req.query
