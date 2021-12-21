@@ -36,10 +36,27 @@ describe('Test all endpoints of Movies', () => {
     expect(res.body.movie.rating).to.equal('4')
     id = res.body.movie._id
   })
+  it('#GET one movie by id, response 200', async () => {
+    const res = await api.get(`${url}/${id}`).set('Authorization', token)
+    expect(res.statusCode).to.be.equal(200)
+    expect(res.body).to.have.property('movie')
+    expect(res.body.movie.title).to.be.equal('Piratas del Caribe')
+    expect(res.body.movie.rating).to.equal('4')
+  })
   it('#PUT one movie by ID, response 201', async () => {
-    const res = await api.put(`${url}/${id}`).set('Authorization', token)
-
+    const res = await api
+      .put(`${url}/${id}`)
+      .set('Authorization', token)
+      .send({
+        title: 'Piratas 5',
+        dateCreated: '2015-5-14',
+        rating: '2'
+      })
     expect(res.statusCode).to.equal(201)
+    const getMovie = await api.get(`${url}/${id}`).set('Authorization', token)
+    console.log(getMovie.body)
+    expect(getMovie.body.movie.title).to.be.equal('Piratas 5')
+    expect(getMovie.body.movie.rating).to.be.equal('2')
   })
   it('#DELETE one movie, response 200', async () => {
     const res = await api.delete(`${url}/${id}`).set('Authorization', token)
