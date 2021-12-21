@@ -25,6 +25,7 @@ describe('Test /api/v1/auth', () => {
     })
     expect(res.statusCode).equal(201)
     expect(res.body.msg).to.be.equal('The user was logged saccesfully')
+    expect(res.body.token).to.not.be.undefined
 
     // expect(res.body.token).not.be(undefined)
     // this is because I'am not secure length of token

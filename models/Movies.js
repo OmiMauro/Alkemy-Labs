@@ -22,14 +22,13 @@ const Movies = sequelize.define('Movies', {
       model: 'Users',
       key: '_id'
     } */
-  } /* ,
-  updatedBy: {
+  }, /* ,  updatedBy: {
     type: Sequelize.DataTypes.UUID,
     references: {
       model: 'Users',
       key: '_id'
     }
-  }, */,
+  }, */
   /* characters_fk: {
     type: Sequelize.DataTypes.UUID,
     references: {

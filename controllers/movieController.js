@@ -46,7 +46,7 @@ const getMovie = async (req, res) => {
   const movie = await Movies.findByPk(id, {
     include: 'Characters'
   })
-  res.status(201).json({ movie })
+  res.status(200).json({ movie })
 }
 const deleteMovie = async (req, res) => {
   const { id } = req.params
@@ -65,7 +65,7 @@ const getAllMovies = async (req, res) => {
     where: queryObj,
     order: [orderParams]
   })
-  res.status(201).json({ movies })
+  res.status(200).json({ movies })
 }
 const updateMovieAndCharacter = async (req, res) => {
   const { characterId, movieId } = req.params
