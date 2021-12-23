@@ -1,6 +1,6 @@
-import { BadRequest } from './bad-request.js'
-import { NotFound } from './not-found.js'
-import { Unauthenticated } from './unauthenticated.js'
-import { CustomAPIError } from './custom-error.js'
+import { BadRequest } from './BadRequest.js'
+import { NotFound } from './NotFound.js'
+import { Unauthenticated } from './Unauthenticated.js'
+import { CustomAPIError } from './CustomAPIError.js'
 
 export { BadRequest, NotFound, Unauthenticated, CustomAPIError }

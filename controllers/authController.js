@@ -3,13 +3,13 @@ import bcrypt from 'bcrypt'
 import jsonwebtoken from 'jsonwebtoken'
 import expressJWT from 'express-jwt'
 import { transporter } from '../services/emails.js'
-import { Unauthenticated } from '../errors/unauthenticated.js'
+import { Unauthenticated } from '../errors/Unauthenticated.js'
 const loginUser = async (req, res) => {
   const { email, password } = req.body
   if (email && password) {
     const user = await User.findOne({ where: { email } })
     if (!(user && (await bcrypt.compare(password, user.hashedPassword)))) {
-      throw new Unauthenticated('The email or password wrong')
+      throw new Unauthenticated('The email or password is wrong')
       /*  return res
         .status(404)
         .json({ error: 'The email or password wrong. Please try only time' }) */

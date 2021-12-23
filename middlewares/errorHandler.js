@@ -1,7 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 
-const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log(err.toString())
+const errorHandler = (err, req, res, next) => {
   let customError = {
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || 'Try again later'
@@ -25,6 +24,6 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       msg: err.message
     }
   }
-  return res.status(customError.statusCode).json({ msg: customError.msg, err })
+  return res.status(customError.statusCode).json({ msg: customError.msg })
 }
-export { errorHandlerMiddleware }
+export { errorHandler }
