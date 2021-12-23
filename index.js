@@ -3,7 +3,14 @@ import express from 'express'
 import sequelize from './db/database.js'
 import cors from 'cors'
 import morgan from 'morgan'
+import 'express-async-errors'
 
+// middleware of app
+import { errorHandler } from './middlewares/errorHandler.js'
+/* import { Character } from './models/Character.js'
+import { Movies } from './models/Movies.js'
+import { User } from './models/User.js'
+import { Genre } from './models/Genre.js' */
 import { Character, Genre, Movies, User } from './models/index.js'
 // Routes of server
 import { genreRouter } from './routes/genreRoute.js'
@@ -25,6 +32,7 @@ server.use('/api/v1/genres', genreRouter)
 server.use('/api/v1/movies', movieRouter)
 server.use('/api/v1/auth', authRouter)
 
+server.use(errorHandler)
 const connectDB = () => {
   try {
     sequelize.authenticate()
