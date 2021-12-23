@@ -1,12 +1,11 @@
 import { Router } from 'express'
+import { loginUser, registerUser } from '../controllers/authController.js'
 import {
-  loginUser,
-  registerUser,
-  logout
-} from '../controllers/authController.js'
+  validateLogin,
+  validateRegister
+} from '../middlewares/validationAuth.js'
 const authRouter = Router()
 
-authRouter.post('/register', registerUser)
-authRouter.post('/login', loginUser)
-authRouter.post('/logout', logout)
+authRouter.post('/register', validateRegister, registerUser)
+authRouter.post('/login', validateLogin, loginUser)
 export { authRouter }

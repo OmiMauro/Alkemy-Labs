@@ -2,9 +2,16 @@ import { Movies } from '../models/Movies.js'
 import { Genre } from '../models/Genre.js'
 import { Character } from '../models/Character.js'
 import sequelize from 'sequelize/dist/index.js'
+import { validationResult } from 'express-validator'
+import { StatusCodes } from 'http-status-codes'
+import { ValidateData } from '../errors/ValidateData.js'
 
 const { where, Op } = sequelize
 const createMovie = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { userId: createdBy } = req.user
   const { path } = req.file
   const { title, dateCreated, rating, genres_fk } = req.body

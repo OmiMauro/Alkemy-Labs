@@ -9,15 +9,16 @@ import {
 } from '../controllers/characterController.js'
 
 import { uploadFile } from '../services/uploadFiles.js'
-
+import { validatePostCharacter } from '../middlewares/validationCharacter.js'
 import { requireSignin } from '../controllers/authController.js'
+
 const characterRouter = Router()
 
 characterRouter
   .route('/')
   .all(requireSignin)
   .get(getAllCharacters)
-  .post(uploadFile.single('image'), createCharacter)
+  .post(uploadFile.single('image'), validatePostCharacter, createCharacter)
 
 characterRouter
   .route('/:id')

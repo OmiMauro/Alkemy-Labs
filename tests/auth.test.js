@@ -34,4 +34,16 @@ describe('Test /api/v1/auth', () => {
     // this is because I'am not secure length of token
     /* expect(res.body.token).to.be.length.greaterThan(15) */
   })
+  it('/login - Response 401 - user login with email and password registers wrong', async () => {
+    const res = await api.post('/api/v1/auth/login').send({
+      email: 'mailuser@gmail.com',
+      password: 'password1'
+    })
+    expect(res.statusCode).equal(401)
+    expect(res.body.msg).to.be.equal('The email or password is wrong')
+
+    // expect(res.body.token).not.be(undefined)
+    // this is because I'am not secure length of token
+    /* expect(res.body.token).to.be.length.greaterThan(15) */
+  })
 })

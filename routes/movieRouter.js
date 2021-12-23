@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { uploadFile } from '../services/uploadFiles.js'
-
+import { validatePostMovie } from '../middlewares/validationMovie.js'
 import { requireSignin } from '../controllers/authController.js'
 // method for verify authentication for access all routes
 import {
@@ -17,7 +17,7 @@ movieRouter
   .route('/')
   .all(requireSignin)
   .get(getAllMovies)
-  .post(uploadFile.single('image'), createMovie)
+  .post(uploadFile.single('image'), validatePostMovie, createMovie)
 movieRouter
   .route('/:id')
   .all(requireSignin)

@@ -1,32 +1,40 @@
-import { User } from '../models/User.js'
 import bcrypt from 'bcrypt'
 import jsonwebtoken from 'jsonwebtoken'
 import expressJWT from 'express-jwt'
+
+import { User } from '../models/User.js'
 import { transporter } from '../services/emails.js'
 import { Unauthenticated } from '../errors/Unauthenticated.js'
+import { ValidateData } from '../errors/ValidateData.js'
+import { validationResult } from 'express-validator'
+
 const loginUser = async (req, res) => {
-  const { email, password } = req.body
-  if (email && password) {
-    const user = await User.findOne({ where: { email } })
-    if (!(user && (await bcrypt.compare(password, user.hashedPassword)))) {
-      throw new Unauthenticated('The email or password is wrong')
-      /*  return res
-        .status(404)
-        .json({ error: 'The email or password wrong. Please try only time' }) */
-    }
-    const payload = {
-      email: user.email,
-      name: user.name,
-      username: user.username,
-      userId: user._id
-    }
-    const token = await jsonwebtoken.sign(payload, process.env.SECRET_KEY, {
-      expiresIn: '2d'
-    })
-    res.status(201).json({ msg: 'The user was logged saccesfully', token })
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
   }
+  const { email, password } = req.body
+  const user = await User.findOne({ where: { email } })
+  if (!(user && (await bcrypt.compare(password, user.hashedPassword)))) {
+    throw new Unauthenticated('The email or password is wrong')
+  }
+  const payload = {
+    email: user.email,
+    name: user.name,
+    username: user.username,
+    userId: user._id
+  }
+  const token = await jsonwebtoken.sign(payload, process.env.SECRET_KEY, {
+    expiresIn: '2d'
+  })
+  res.status(201).json({ msg: 'The user was logged saccesfully', token })
 }
+
 const registerUser = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { email, password, username, name } = req.body
   const findUser = await User.findOne({ where: { email } })
   if (findUser) {
@@ -61,17 +69,10 @@ const registerUser = async (req, res) => {
   })
 }
 
-const logout = (req, res) => {
-  res.clearCookie('t')
-  res.json({ msg: 'A cerrado su sesion' })
-}
-const tokenRevoked = (req, payload, done) => {
-  done(new Unauthenticated('error in token'))
-}
 const requireSignin = expressJWT({
   algorithms: ['HS256'],
-  secret: process.env.SECRET_KEY
-  /* isRevoked: tokenRevoked */
+  secret: process.env.SECRET_KEY,
+  credentialsRequired: false
 })
 
-export { loginUser, registerUser, logout, requireSignin }
+export { loginUser, registerUser, requireSignin }
