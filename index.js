@@ -7,10 +7,7 @@ import 'express-async-errors'
 
 // middleware of app
 import { errorHandler } from './middlewares/errorHandler.js'
-/* import { Character } from './models/Character.js'
-import { Movies } from './models/Movies.js'
-import { User } from './models/User.js'
-import { Genre } from './models/Genre.js' */
+
 import { Character, Genre, Movies, User } from './models/index.js'
 // Routes of server
 import { genreRouter } from './routes/genreRoute.js'
