@@ -1,9 +1,12 @@
 import { expect } from 'chai'
 import request from 'supertest'
-import { app, server } from '../index.js'
+import { app, server, User } from '../index.js'
 
 const api = request(app)
 describe('Test /api/v1/auth', () => {
+  before(async () => {
+    await User.destroy({ where: { email: 'emailuser@gmail.com' } })
+  })
   it('/register Response 201-Create user with email, pwd, name and username.', async () => {
     const res = await api.post('/api/v1/auth/register').send({
       name: 'nameuser',

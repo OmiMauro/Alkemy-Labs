@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import request from 'supertest'
-import { app, server } from '../index.js'
+import { app, Character } from '../index.js'
 const api = request(app)
 describe('Characters of World Disney', () => {
   let token
@@ -14,13 +14,17 @@ describe('Characters of World Disney', () => {
     })
   }) */
   before(async () => {
+    const deleteAllCharacters = await Character.destroy({ where: {} })
     const response = await api.post('/api/v1/auth/login').send({
       email: 'emailuser@gmail.com',
       password: 'password1'
     })
     token = `Bearer ${response.body.token}`
   })
-
+  after(async () => {
+    const getCharacters = await Character.findAll({})
+    console.log(getCharacters)
+  })
   it('GET all /character', async () => {
     const res = await api.get('/api/v1/characters').set('Authorization', token)
     expect(res.statusCode).equal(200)
@@ -35,7 +39,14 @@ describe('Characters of World Disney', () => {
       .field('dateBirth', '2020-11-19T00:00:00.000Z')
       .field('weigth', 90.1)
       .field('history', 'From Australia')
-
+    const res2 = await api
+      .post('/api/v1/characters')
+      .set('Authorization', token)
+      .attach('image', 'tests/Jack.jpg')
+      .field('name', 'Jack')
+      .field('dateBirth', '2020-11-19T00:00:00.000Z')
+      .field('weigth', 90.1)
+      .field('history', 'From Australia')
     const { character } = res.body
     id = character._id
     expect(res.statusCode).equal(201)

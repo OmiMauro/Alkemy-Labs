@@ -1,12 +1,15 @@
 import { expect } from 'chai'
 import request from 'supertest'
-import { server, app } from '../index.js'
+import { server, app, Movies } from '../index.js'
 
 const api = request(app)
 const url = '/api/v1/movies'
 describe('Test all endpoints of Movies', () => {
   let token
   let id
+  before(async () => {
+    await Movies.destroy({ where: {} })
+  })
   before(async () => {
     const res = await api.post('/api/v1/auth/login').send({
       email: 'emailuser@gmail.com',
@@ -54,7 +57,6 @@ describe('Test all endpoints of Movies', () => {
       })
     expect(res.statusCode).to.equal(201)
     const getMovie = await api.get(`${url}/${id}`).set('Authorization', token)
-    console.log(getMovie.body)
     expect(getMovie.body.movie.title).to.be.equal('Piratas 5')
     expect(getMovie.body.movie.rating).to.be.equal('2')
   })

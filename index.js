@@ -36,7 +36,7 @@ const connectDB = () => {
   }
 }
 
-const db = connectDB()
+connectDB()
 
 const app = server.listen(port, () => console.log('Runing in', port))
-export { server, app, db }
+export { app, server, Character, Genre, Movies, User }
