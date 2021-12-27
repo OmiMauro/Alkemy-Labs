@@ -5,14 +5,7 @@ const api = request(app)
 describe('Characters of World Disney', () => {
   let token
   let id
-  /*  before(async () => {
-    const user = await api.post('/api/v1/auth/register').send({
-      email: 'ominuka.mauro@gmail.com',
-      password: 'password1',
-      name: 'Manu',
-      username: 'OmiMauro'
-    })
-  }) */
+
   before(async () => {
     const deleteAllCharacters = await Character.destroy({ where: {} })
     const response = await api.post('/api/v1/auth/login').send({
@@ -21,32 +14,36 @@ describe('Characters of World Disney', () => {
     })
     token = `Bearer ${response.body.token}`
   })
-  after(async () => {
-    const getCharacters = await Character.findAll({})
-    console.log(getCharacters)
-  })
+
+  const character1 = () => {
+    return api
+      .post('/api/v1/characters')
+      .set('Authorization', token)
+      .attach('image', 'tests/Jack.jpg')
+      .field('name', 'Jack')
+      .field('dateBirth', '2020-11-19T00:00:00.000Z')
+      .field('weigth', 90.1)
+      .field('history', 'From Australia')
+  }
+  const character2 = () => {
+    return api
+      .post('/api/v1/characters')
+      .set('Authorization', token)
+      .attach('image', 'tests/Jack.jpg')
+      .field('name', 'Ocnoor')
+      .field('dateBirth', '2020-11-19T00:00:00.000Z')
+      .field('weigth', 190.1)
+      .field('history', 'The best character of world')
+  }
+
   it('GET all /character', async () => {
     const res = await api.get('/api/v1/characters').set('Authorization', token)
     expect(res.statusCode).equal(200)
     expect(res.body).to.have.property('character')
   })
   it('POST one /character', async () => {
-    const res = await api
-      .post('/api/v1/characters')
-      .set('Authorization', token)
-      .attach('image', 'tests/Jack.jpg')
-      .field('name', 'Jack')
-      .field('dateBirth', '2020-11-19T00:00:00.000Z')
-      .field('weigth', 90.1)
-      .field('history', 'From Australia')
-    const res2 = await api
-      .post('/api/v1/characters')
-      .set('Authorization', token)
-      .attach('image', 'tests/Jack.jpg')
-      .field('name', 'Jack')
-      .field('dateBirth', '2020-11-19T00:00:00.000Z')
-      .field('weigth', 90.1)
-      .field('history', 'From Australia')
+    const res = await character1()
+
     const { character } = res.body
     id = character._id
     expect(res.statusCode).equal(201)
@@ -82,5 +79,45 @@ describe('Characters of World Disney', () => {
       .delete(`/api/v1/characters/${id}`)
       .set('Authorization', token)
     expect(res.statusCode).equal(200)
+  })
+
+  // testing for bad request
+  it('DELETE one /character/:id that no exist. Status Code 400 and msg', async () => {
+    const createCharacter = await character2()
+    const { character } = createCharacter.body
+    const res = await api
+      .delete(`/api/v1/characters/${character._id}a`)
+      .set('Authorization', token)
+    await expect(res.statusCode).to.equal(400)
+    await expect(res.body.msg).contain(
+      'La clave ingresada como parametro de busqueda no es valida.'
+    )
+  })
+  it('PUT one /character/:id that no exist. Status Code 400 and msg', async () => {
+    const createCharacter = await character1()
+    const { character } = createCharacter.body
+    const res = await api
+      .put(`/api/v1/characters/${character._id}a`)
+      .set('Authorization', token)
+      .send({
+        name: 'Jack Sparrow',
+        weigth: 100,
+        history: 'New History of Jack'
+      })
+    expect(res.statusCode).to.equal(400)
+    expect(res.body.msg).contain(
+      'La clave ingresada como parametro de busqueda no es valida.'
+    )
+  })
+  it('GET one /character/:id that no exist. Status Code 400 and msg', async () => {
+    const createCharacter = await character2()
+    const { character } = createCharacter.body
+    const res = await api
+      .get(`/api/v1/characters/${character._id}a`)
+      .set('Authorization', token)
+    expect(res.statusCode).to.equal(400)
+    expect(res.body.msg).contain(
+      'La clave ingresada como parametro de busqueda no es valida.'
+    )
   })
 })

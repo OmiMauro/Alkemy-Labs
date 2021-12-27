@@ -74,5 +74,4 @@ const requireSignin = expressJWT({
   secret: process.env.SECRET_KEY,
   credentialsRequired: false
 })
-
 export { loginUser, registerUser, requireSignin }

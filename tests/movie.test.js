@@ -17,20 +17,22 @@ describe('Test all endpoints of Movies', () => {
     })
     token = 'Bearer ' + res.body.token
   })
-  it('#GET all movies, response 200', async () => {
-    const res = await api.get(url).set('Authorization', token)
-    expect(res.statusCode).to.equal(200)
-    expect(res.body.movies).to.be.an('array')
-  })
-  it('#POST one movie, response 201', async () => {
-    const res = await api
+  const createMovie = async () => {
+    return await api
       .post(url)
       .set('Authorization', token)
       .attach('image', 'tests/piratasdelcaribe.jpg')
       .field('title', 'Piratas del Caribe')
       .field('dateCreated', '2002-05-10')
       .field('rating', '4')
-
+  }
+  it('#GET all movies, response 200', async () => {
+    const res = await api.get(url).set('Authorization', token)
+    expect(res.statusCode).to.equal(200)
+    expect(res.body.movies).to.be.an('array')
+  })
+  it('#POST one movie, response 201', async () => {
+    const res = await createMovie()
     expect(res.statusCode).to.equal(201)
     expect(res.body).to.have.property('movie')
     expect(res.body.movie.image).to.not.be.empty
@@ -63,5 +65,44 @@ describe('Test all endpoints of Movies', () => {
   it('#DELETE one movie, response 200', async () => {
     const res = await api.delete(`${url}/${id}`).set('Authorization', token)
     expect(res.statusCode).to.equal(201)
+  })
+  // testing for bad request
+  it('DELETE one /movie/:id that no exist. Status Code 400 and msg', async () => {
+    const newMovie = await createMovie()
+    const { movie } = newMovie.body
+    const res = await api
+      .delete(`/api/v1/movies/${movie._id}a`)
+      .set('Authorization', token)
+    await expect(res.statusCode).to.equal(400)
+    await expect(res.body.msg).contain(
+      'La clave ingresada como parametro de busqueda no es valida.'
+    )
+  })
+  it('PUT one /movie/:id that no exist. Status Code 400 and msg', async () => {
+    const newMovie = await createMovie()
+    const { movie } = newMovie.body
+    const res = await api
+      .put(`/api/v1/movies/${movie._id}a`)
+      .set('Authorization', token)
+      .send({
+        name: 'Jack Sparrow',
+        weigth: 100,
+        history: 'New History of Jack'
+      })
+    expect(res.statusCode).to.equal(400)
+    expect(res.body.msg).contain(
+      'La clave ingresada como parametro de busqueda no es valida.'
+    )
+  })
+  it('GET one /movie/:id that no exist. Status Code 400 and msg', async () => {
+    const newMovie = await createMovie()
+    const { movie } = newMovie.body
+    const res = await api
+      .get(`/api/v1/movies/${movie._id}a`)
+      .set('Authorization', token)
+    expect(res.statusCode).to.equal(400)
+    expect(res.body.msg).contain(
+      'La clave ingresada como parametro de busqueda no es valida.'
+    )
   })
 })

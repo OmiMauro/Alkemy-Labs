@@ -8,9 +8,9 @@ const Movies = sequelize.define('Movies', {
     allowNull: false,
     primaryKey: true
   },
-  image: Sequelize.DataTypes.STRING,
-  title: Sequelize.DataTypes.STRING,
-  dateCreated: Sequelize.DataTypes.DATE,
+  image: { type: Sequelize.DataTypes.STRING },
+  title: { type: Sequelize.DataTypes.STRING },
+  dateCreated: { type: Sequelize.DataTypes.DATE },
   rating: {
     type: Sequelize.DataTypes.ENUM,
     values: ['1', '2', '3', '4', '5'],
@@ -18,30 +18,9 @@ const Movies = sequelize.define('Movies', {
   },
   createdBy: {
     type: Sequelize.DataTypes.UUID
-    /* references: {
-      model: 'Users',
-      key: '_id'
-    } */
-  }, /* ,  updatedBy: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
-      model: 'Users',
-      key: '_id'
-    }
-  }, */
-  /* characters_fk: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
-      model: 'Characters',
-      key: '_id'
-    }
-  }, */
+  },
   genres_fk: {
     type: Sequelize.DataTypes.UUID
-    /* references: {
-      model: 'Genres',
-      key: '_id'
-    } */
   },
   createdAt: {
     type: Sequelize.DataTypes.DATE,

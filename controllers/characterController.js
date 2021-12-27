@@ -26,7 +26,7 @@ const createCharacter = async (req, res, next) => {
     createdBy
   })
   if (!character) {
-    throw new BadRequest(
+    throw new NotFound(
       'No se pudo crear un personaje con los datos ingresados.'
     )
   }
@@ -35,24 +35,23 @@ const createCharacter = async (req, res, next) => {
 
 const updateCharacter = async (req, res) => {
   const { id } = req.params
-  const { userId: updatedBy } = req.user
+  // const { userId: updatedBy } = req.user
   const { name, dateBirth, weigth, history } = req.body
   const [character] = await Character.update(
     {
       name,
       dateBirth,
       weigth,
-      history,
-      updatedBy
+      history
     },
     {
       where: { _id: id }
     }
   )
+  console.log(character)
   if (!character) {
     throw new NotFound('No se encontró un personaje con el ID ingresado')
   }
-
   res.status(201).json({ character })
 }
 
@@ -69,6 +68,10 @@ const getCharacter = async (req, res) => {
 const deleteCharacter = async (req, res) => {
   const { id } = req.params
   const character = await Character.destroy({ where: { _id: id } })
+  console.log(character)
+  if (!character) {
+    throw new NotFound('No se encontró un personaje con el ID ingresado')
+  }
   res.status(200).json({ character })
 }
 const getAllCharacters = async (req, res) => {

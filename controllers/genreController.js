@@ -33,7 +33,7 @@ const updateGenre = async (req, res) => {
     }
   )
   if (!genre) {
-    throw new NotFound('No se encontró un personaje con el ID ingresado')
+    throw new NotFound('No se encontró un genero con el ID ingresado')
   }
   res.status(201).json({ genre })
 }
@@ -41,7 +41,7 @@ const getGenre = async (req, res) => {
   const { id } = req.params
   const genre = await Genre.findByPk(id)
   if (!genre) {
-    throw new NotFound('No se encontró un personaje con el ID ingresado')
+    throw new NotFound('No se encontró un genero con el ID ingresado')
   }
   res.status(200).json({ genre })
 }
@@ -49,14 +49,14 @@ const deleteGenre = async (req, res) => {
   const { id } = req.params
   const genre = await Genre.destroy({ where: { _id: id } })
   if (!genre) {
-    throw new NotFound('No se encontró un personaje con el ID ingresado')
+    throw new NotFound('No se encontró un genero con el ID ingresado')
   }
   res.status(200).json({ genre })
 }
 const getAllGenres = async (req, res) => {
   const genres = await Genre.findAll()
   if (!genres) {
-    throw new NotFound('No se encontró un personaje con el ID ingresado')
+    throw new NotFound('No se encontró un genero con el ID ingresado')
   }
   res.status(200).json({ genres })
 }

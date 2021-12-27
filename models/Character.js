@@ -7,13 +7,13 @@ const Character = sequelize.define('Characters', {
     defaultValue: Sequelize.DataTypes.UUIDV1,
     primaryKey: true
   },
-  image: Sequelize.DataTypes.STRING,
-  name: Sequelize.DataTypes.STRING,
+  image: { type: Sequelize.DataTypes.STRING },
+  name: { type: Sequelize.DataTypes.STRING },
   dateBirth: {
     type: Sequelize.DataTypes.DATE
   },
-  weigth: Sequelize.DataTypes.FLOAT,
-  history: Sequelize.DataTypes.STRING,
+  weigth: { type: Sequelize.DataTypes.FLOAT },
+  history: { type: Sequelize.DataTypes.STRING },
   createdAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW
@@ -24,24 +24,6 @@ const Character = sequelize.define('Characters', {
   },
   createdBy: {
     type: Sequelize.DataTypes.UUID
-    /*  references: {
-      model: 'Users',
-      key: '_id'
-    } */
   }
-  /* updatedBy: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
-      model: 'Users',
-      key: '_id'
-    }
-  } */
-  /* movies_fk: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
-      model: 'Movies',
-      key: '_id'
-    }
-  } */
 })
 export { Character }

@@ -7,15 +7,8 @@ const Genre = sequelize.define('Genres', {
     allowNull: false,
     primaryKey: true
   },
-  image: Sequelize.DataTypes.STRING,
-  name: Sequelize.DataTypes.STRING,
-  /* movies_fk: {
-    type: Sequelize.DataTypes.UUID,
-    references: {
-      model: 'Movies',
-      key: '_id'
-    }
-  }, */
+  image: { type: Sequelize.DataTypes.STRING },
+  name: { type: Sequelize.DataTypes.STRING },
   createdAt: {
     type: Sequelize.DataTypes.DATE,
     defaultValue: Sequelize.DataTypes.NOW

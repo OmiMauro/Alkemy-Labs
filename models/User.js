@@ -9,8 +9,8 @@ const User = sequelize.define('Users', {
     allowNull: false,
     primaryKey: true
   },
-  username: Sequelize.DataTypes.STRING,
-  name: Sequelize.DataTypes.STRING,
+  username: { type: Sequelize.DataTypes.STRING, allowNull: false },
+  name: { type: Sequelize.DataTypes.STRING, allowNull: false },
   email: {
     type: Sequelize.DataTypes.STRING,
     unique: true,
@@ -20,11 +20,8 @@ const User = sequelize.define('Users', {
     allowNull: false
   },
   hashedPassword: {
-    type: Sequelize.DataTypes.STRING
-    /* validate: {},
-    set (pwd) {
-      this.setDataValue('password', hash(pwd, 9))
-    } */
+    type: Sequelize.DataTypes.STRING,
+    allowNull: false
   },
   createdAt: {
     type: Sequelize.DataTypes.DATE,
