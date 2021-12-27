@@ -9,7 +9,11 @@ import {
 } from '../controllers/characterController.js'
 
 import { uploadFile } from '../services/uploadFiles.js'
-import { validatePostCharacter } from '../middlewares/validationCharacter.js'
+import {
+  validatePostCharacter,
+  validateIDParams,
+  validateIDParamsMovieCharacter
+} from '../middlewares/validationCharacter.js'
 import { requireSignin } from '../controllers/authController.js'
 
 const characterRouter = Router()
@@ -22,12 +26,12 @@ characterRouter
 
 characterRouter
   .route('/:id')
-  .all(requireSignin)
+  .all(requireSignin, validateIDParams)
   .put(updateCharacter)
   .delete(deleteCharacter)
   .get(getCharacter)
 characterRouter
   .route('/:characterId/movies/:movieId')
-  .all(requireSignin)
+  .all(requireSignin, validateIDParamsMovieCharacter)
   .put(updateCharacterAndMovie)
 export { characterRouter }

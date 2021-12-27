@@ -7,6 +7,7 @@ import { transporter } from '../services/emails.js'
 import { Unauthenticated } from '../errors/Unauthenticated.js'
 import { ValidateData } from '../errors/ValidateData.js'
 import { validationResult } from 'express-validator'
+import { BadRequest } from '../errors/BadRequest.js'
 
 const loginUser = async (req, res) => {
   const errors = validationResult(req)
@@ -50,6 +51,11 @@ const registerUser = async (req, res) => {
     username,
     name
   })
+  if (!user) {
+    throw new BadRequest(
+      'No se pudo crear un usuario con los datos ingresados.'
+    )
+  }
   if (user) {
     const text = 'Register in Challenge Alkemy'
     const from = process.env.EMAIL_MSG

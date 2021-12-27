@@ -1,5 +1,4 @@
 import { validationResult } from 'express-validator'
-import { StatusCodes } from 'http-status-codes'
 import { BadRequest } from '../errors/BadRequest.js'
 import { NotFound } from '../errors/NotFound.js'
 import { ValidateData } from '../errors/ValidateData.js'
@@ -39,7 +38,7 @@ const updateGenre = async (req, res) => {
 }
 const getGenre = async (req, res) => {
   const { id } = req.params
-  const genre = await Genre.findByPk(id)
+  const genre = await Genre.findByPk(id, { include: 'Movies' })
   if (!genre) {
     throw new NotFound('No se encontró un genero con el ID ingresado')
   }
