@@ -5,14 +5,14 @@ import {
   getCharacter,
   deleteCharacter,
   getAllCharacters,
-  updateCharacterAndMovie
+  addMovieToCharacter
 } from '../controllers/characterController.js'
 
 import { uploadFile } from '../services/uploadFiles.js'
 import {
-  validatePostCharacter,
+  validateCharacter,
   validateIDParams,
-  validateIDParamsMovieCharacter
+  validateCharacterId
 } from '../middlewares/validationCharacter.js'
 import { requireSignin } from '../controllers/authController.js'
 
@@ -22,16 +22,16 @@ characterRouter
   .route('/')
   .all(requireSignin)
   .get(getAllCharacters)
-  .post(uploadFile.single('image'), validatePostCharacter, createCharacter)
+  .post(uploadFile.single('image'), validateCharacter, createCharacter)
 
 characterRouter
   .route('/:id')
   .all(requireSignin, validateIDParams)
-  .put(updateCharacter)
+  .put(uploadFile.single('image'), validateCharacter, updateCharacter)
   .delete(deleteCharacter)
   .get(getCharacter)
 characterRouter
-  .route('/:characterId/movies/:movieId')
-  .all(requireSignin, validateIDParamsMovieCharacter)
-  .put(updateCharacterAndMovie)
+  .route('/:characterId/movies')
+  .all(requireSignin, validateCharacterId)
+  .patch(addMovieToCharacter)
 export { characterRouter }

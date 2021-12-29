@@ -35,6 +35,7 @@ const updateMovie = async (req, res) => {
   if (!errors.isEmpty()) {
     throw new ValidateData('Validation Failed', errors.array())
   }
+  const { path } = req.file
   const { id } = req.params
   const { title, dateCreated, rating } = req.body
   const { userId: updatedBy } = req.user
@@ -43,7 +44,8 @@ const updateMovie = async (req, res) => {
       title,
       dateCreated,
       rating,
-      updatedBy
+      updatedBy,
+      image: path
     },
     {
       where: { _id: id }
@@ -81,43 +83,71 @@ const deleteMovie = async (req, res) => {
   res.status(201).json({ movie })
 }
 const getAllMovies = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { title, genre, order } = req.query
   const queryObj = {}
   let orderParams = ['createdAt', 'DESC']
-  if (title) queryObj.title = { [Op.regexp]: title }
-  if (genre) queryObj.genre = { [Op.eq]: genre }
+  if (title) queryObj.title = { [Op.iRegexp]: title }
+  if (genre) queryObj.genres_fk = { [Op.eq]: genre }
   if (order) orderParams = ['dateCreated', order]
   const movies = await Movies.findAll({
     atributtes: ['title', 'image', 'dateCreated'],
     where: queryObj,
     order: [orderParams]
   })
+  if (movies.length === 0) {
+    throw new NotFound('No se encontraron movies con la busqueda ingresada')
+  }
   res.status(200).json({ movies })
 }
-const patchGenreFK = async (req, res) => {
+const addGenre = async (req, res) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     throw new ValidateData('Validation Failed', errors.array())
   }
+
+  const { userId: updatedBy } = req.user
+
   const { id: idMovie } = req.params
   const { genres_fk } = req.body
   const movieFind = await Movies.findOne({ where: { _id: idMovie } })
-  if (!movieFind) {
-    throw new NotFound('No se encontró una pelicula con el id ingresado')
-  }
+
   const genreFind = await Genre.findOne({ where: { _id: genres_fk } })
-  if (!genreFind) {
-    throw new NotFound('No se encontró un genre con el id ingresado')
+  if (!genreFind || !movieFind) {
+    throw new NotFound(
+      `No se encontró un ${genreFind ? 'genero' : ''}${
+        movieFind ? 'a pelicula/serie' : ''
+      } con el id ingresado`
+    )
   }
   const movie = await movieFind.setGenre(genreFind)
+  await movieFind.update({ updatedBy })
   res.status(201).json({ movie })
 }
 
-const updateMovieAndCharacter = async (req, res) => {
-  const { characterId, movieId } = req.params
-  const character = await Character.findByPk(characterId)
+const addCharacterToMovie = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
+  const { userId: updatedBy } = req.user
+  const { movieId } = req.params
+  const { characterId } = req.body
   const movieFind = await Movies.findByPk(movieId)
-  const movie = await movieFind.setCharacters(character)
+  const character = await Character.findByPk(characterId)
+
+  if (!movieFind || !characterId) {
+    throw new NotFound(
+      `No se encontró un ${movieFind ? 'a pelicula/serie' : ''}${
+        characterId ? 'personaje' : ''
+      } con el id ingresado`
+    )
+  }
+  const movie = await movieFind.addCharacters(character)
+  await movieFind.update({ updatedBy })
   res.status(201).json({ movie })
 }
 
@@ -127,6 +157,6 @@ export {
   getMovie,
   deleteMovie,
   getAllMovies,
-  updateMovieAndCharacter,
-  patchGenreFK
+  addCharacterToMovie,
+  addGenre
 }

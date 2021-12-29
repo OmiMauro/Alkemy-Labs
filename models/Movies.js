@@ -19,6 +19,9 @@ const Movies = sequelize.define('Movies', {
   createdBy: {
     type: Sequelize.DataTypes.UUID
   },
+  updatedBy: {
+    type: Sequelize.DataTypes.UUID
+  },
   genres_fk: {
     type: Sequelize.DataTypes.UUID
   },

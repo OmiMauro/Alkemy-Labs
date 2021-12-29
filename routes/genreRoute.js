@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { uploadFile } from '../services/uploadFiles.js'
 import {
-  validatePostGenre,
+  validateGenre,
   validateIDParams
 } from '../middlewares/validationGenre.js'
 import { requireSignin } from '../controllers/authController.js'
@@ -19,11 +19,11 @@ genreRouter
   .route('/')
   .all(requireSignin)
   .get(getAllGenres)
-  .post(uploadFile.single('image'), validatePostGenre, createGenre)
+  .post(uploadFile.single('image'), validateGenre, createGenre)
 genreRouter
   .route('/:id')
   .all(requireSignin, validateIDParams)
   .get(getGenre)
-  .put(updateGenre)
+  .put(uploadFile.single('image'), validateGenre, updateGenre)
   .delete(deleteGenre)
 export { genreRouter }

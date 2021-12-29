@@ -24,6 +24,9 @@ const Character = sequelize.define('Characters', {
   },
   createdBy: {
     type: Sequelize.DataTypes.UUID
+  },
+  updatedBy: {
+    type: Sequelize.DataTypes.UUID
   }
 })
 export { Character }

@@ -12,5 +12,5 @@ const id = param('id', 'Debe ingresar un ID')
 
 const validateIDParams = [id]
 
-const validatePostGenre = [name]
-export { validatePostGenre, validateIDParams }
+const validateGenre = [name]
+export { validateGenre, validateIDParams }

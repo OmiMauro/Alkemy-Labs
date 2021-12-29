@@ -1,21 +1,22 @@
 import { Router } from 'express'
 import { uploadFile } from '../services/uploadFiles.js'
 import {
-  validatePostMovie,
+  validateMovie,
   validateIDParamsMovieCharacter,
   validateIDParams,
-  validateIdFk
+  validateGenre
 } from '../middlewares/validationMovie.js'
+
 import { requireSignin } from '../controllers/authController.js'
-// method for verify authentication for access all routes
+
 import {
   createMovie,
   updateMovie,
   getMovie,
   deleteMovie,
   getAllMovies,
-  patchGenreFK,
-  updateMovieAndCharacter
+  addCharacterToMovie,
+  addGenre
 } from '../controllers/movieController.js'
 const movieRouter = Router()
 
@@ -23,19 +24,19 @@ movieRouter
   .route('/')
   .all(requireSignin)
   .get(getAllMovies)
-  .post(uploadFile.single('image'), validatePostMovie, createMovie)
+  .post(uploadFile.single('image'), validateMovie, createMovie)
 movieRouter
   .route('/:id')
   .all(requireSignin, validateIDParams)
   .get(getMovie)
-  .put(updateMovie)
+  .put(uploadFile.single('image'), validateMovie, updateMovie)
   .delete(deleteMovie)
 movieRouter
   .route('/:id/genres')
-  .all(requireSignin, validateIDParams, validateIdFk)
-  .patch(patchGenreFK)
+  .all(requireSignin, validateGenre)
+  .patch(addGenre)
 movieRouter
-  .route('/:movieId/character/:characterId')
+  .route('/:movieId/characters')
   .all(requireSignin, validateIDParamsMovieCharacter)
-  .put(updateMovieAndCharacter)
+  .patch(addCharacterToMovie)
 export { movieRouter }

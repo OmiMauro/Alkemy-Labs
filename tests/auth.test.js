@@ -16,10 +16,9 @@ describe('Test /api/v1/auth', () => {
     })
     // expect(res).to.have.property('user')
     expect(res.statusCode).to.be.equal(201)
-    expect(res.body.user.name).to.be.equal('nameuser')
-    expect(res.body.user.username).to.be.equal('username')
-    expect(res.body.user.email).to.be.equal('emailuser@gmail.com')
-    expect(res.body.user.password).not.to.equal('password1')
+    expect(res.body.user.name).to.be.equal('NAMEUSER')
+    expect(res.body.user.username).to.be.equal('USERNAME')
+    expect(res.body.user.email).to.be.equal('EMAILUSER@GMAIL.COM')
   })
   it('/login - Response 201- user login with email and password registers', async () => {
     const res = await api.post('/api/v1/auth/login').send({

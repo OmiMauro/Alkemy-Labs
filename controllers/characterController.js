@@ -34,21 +34,28 @@ const createCharacter = async (req, res, next) => {
 }
 
 const updateCharacter = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { id } = req.params
-  // const { userId: updatedBy } = req.user
+  const { userId: updatedBy } = req.user
+  const { path } = req.file
+
   const { name, dateBirth, weigth, history } = req.body
   const [character] = await Character.update(
     {
       name,
       dateBirth,
       weigth,
-      history
+      history,
+      image: path,
+      updatedBy
     },
     {
       where: { _id: id }
     }
   )
-  console.log(character)
   if (!character) {
     throw new NotFound('No se encontró un personaje con el ID ingresado')
   }
@@ -56,6 +63,10 @@ const updateCharacter = async (req, res) => {
 }
 
 const getCharacter = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { id } = req.params
   const character = await Character.findByPk(id, {
     include: 'Movies'
@@ -66,54 +77,68 @@ const getCharacter = async (req, res) => {
   res.status(200).json({ character })
 }
 const deleteCharacter = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { id } = req.params
   const character = await Character.destroy({ where: { _id: id } })
-  console.log(character)
   if (!character) {
     throw new NotFound('No se encontró un personaje con el ID ingresado')
   }
   res.status(200).json({ character })
 }
 const getAllCharacters = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { name, age, weigth, movies } = req.query
   const queryObj = {}
-
-  if (name) queryObj.name = { [Op.regexp]: name }
+  if (name) queryObj.name = { [Op.iRegexp]: name }
   if (weigth) queryObj.weigth = weigth
   if (age) {
     const date = moment().add(-age, 'year')
-    queryObj.dateBirth = { [Op.gte]: date }
+    queryObj.dateBirth = { [Op.lte]: date.toDate() }
   }
+  let character
+  const atributtes = ['name', 'image']
   if (movies) {
     const include = [{ model: Movies, as: 'Movies', where: { _id: movies } }]
-    const character = await Character.findAll(
+    character = await Character.findAll(
       { include },
       { where: queryObj },
-      { atributtes: ['name', 'image'] }
+      { atributtes }
     )
-    return res.status(200).json({ character })
+  } else {
+    character = await Character.findAll({ where: queryObj }, { atributtes })
   }
-  const character = await Character.findAll(
-    { where: queryObj },
-    { atributtes: ['name', 'image'] }
-  )
-  if (!character) {
+
+  if (character.length === 0) {
     throw new NotFound('No se encontró un personaje con la busqueda asociada')
   }
   res.status(200).json({ character })
 }
 
-const updateCharacterAndMovie = async (req, res) => {
-  const { characterId, movieId } = req.params
+const addMovieToCharacter = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
+  const { userId: updatedBy } = req.user
+  const { characterId } = req.params
+  const { movieId } = req.body
   const characterFind = await Character.findByPk(characterId)
-  if (!characterFind) {
-    throw new NotFound('No se encontró un personaje con el ID ingresado')
-  }
   const movieFind = await Movies.findByPk(movieId)
-  if (!movieFind) {
-    throw new NotFound('No se encontró una pelicula/serie con el ID ingresado')
+  if (!characterId || !movieFind) {
+    throw new NotFound(
+      `No se encontró un ${characterId ? 'personaje' : ''}${
+        movieFind ? 'a pelicula/serie' : ''
+      } con el id ingresado`
+    )
   }
-  const character = await characterFind.setMovies(movieFind)
+  const character = await characterFind.addMovies(movieFind)
+  await characterFind.update({ updatedBy })
   res.status(201).json({ character })
 }
 export {
@@ -122,5 +147,5 @@ export {
   getCharacter,
   getAllCharacters,
   deleteCharacter,
-  updateCharacterAndMovie
+  addMovieToCharacter
 }

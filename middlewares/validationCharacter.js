@@ -23,15 +23,10 @@ const id = param('id', 'Debe ingresar el ID')
 const characterId = param('characterId', 'Debe ingresar el ID del personaje')
   .notEmpty()
   .isUUID()
-const movieId = param('movieId', 'Debe ingresar el ID de la pelicula')
+const movieId = check('movieId', 'Debe ingresar el ID de la pelicula')
   .notEmpty()
   .isUUID()
 const validateIDParams = [id]
-const validateIDParamsMovieCharacter = [characterId, movieId]
-const validatePostCharacter = [name, weigth, history]
-
-export {
-  validatePostCharacter,
-  validateIDParams,
-  validateIDParamsMovieCharacter
-}
+const validateCharacterId = [characterId, movieId]
+const validateCharacter = [name, weigth, history]
+export { validateCharacter, validateIDParams, validateCharacterId }

@@ -22,11 +22,16 @@ const createGenre = async (req, res) => {
   res.status(201).json({ genre })
 }
 const updateGenre = async (req, res) => {
-  const { userId } = req.user
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
+  const { userId: updatedBy } = req.user
+  const { path } = req.file
   const { id } = req.params
   const { name } = req.body
   const genre = await Genre.update(
-    { name },
+    { name, updatedBy, image: path },
     {
       where: { _id: id }
     }
@@ -37,6 +42,10 @@ const updateGenre = async (req, res) => {
   res.status(201).json({ genre })
 }
 const getGenre = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { id } = req.params
   const genre = await Genre.findByPk(id, { include: 'Movies' })
   if (!genre) {
@@ -45,6 +54,10 @@ const getGenre = async (req, res) => {
   res.status(200).json({ genre })
 }
 const deleteGenre = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const { id } = req.params
   const genre = await Genre.destroy({ where: { _id: id } })
   if (!genre) {
@@ -53,6 +66,10 @@ const deleteGenre = async (req, res) => {
   res.status(200).json({ genre })
 }
 const getAllGenres = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    throw new ValidateData('Validation Failed', errors.array())
+  }
   const genres = await Genre.findAll()
   if (!genres) {
     throw new NotFound('No se encontró un genero con el ID ingresado')

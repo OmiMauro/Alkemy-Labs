@@ -21,13 +21,12 @@ describe('Testing Genres', () => {
       .post(url)
       .set('Authorization', token)
       .attach('image', 'tests/documental.jpg')
-      .field('name', 'Piratas del Caribe 2')
+      .field('name', 'DOCUMENTAL')
   }
   it('#POST One genre, must be return statusCode 201', async () => {
     const res = await createGenre()
-    console.log(res)
     expect(res.statusCode).equal(201)
-    expect(res.body.genre.name).to.be.equal('Piratas del Caribe 2')
+    expect(res.body.genre.name).to.be.equal('DOCUMENTAL')
     expect(res.body.genre.image).to.not.be.empty
     id = res.body.genre._id
   })
@@ -41,14 +40,16 @@ describe('Testing Genres', () => {
     const res = await api
       .put(`${url}/${id}`)
       .set('Authorization', token)
-      .send({ name: 'Piratas del Caribe 5' })
+      .attach('image', 'tests/documental.jpg')
+      .field('name', 'COMEDIA')
     expect(res.statusCode).to.be.equal(201)
   })
   it('#GET one genre by ID, must be return status 200', async () => {
     const res = await api.get(`${url}/${id}`).set('Authorization', token)
     expect(res.statusCode).equal(200)
-    expect(res.body.genre.name).to.be.equal('Piratas del Caribe 5')
+    expect(res.body.genre.name).to.be.equal('COMEDIA')
     expect(res.body.genre.image).to.not.be.empty
+    expect(res.body.genre.image).to.be.an('string')
   })
   it('#DELETE one genre by ID, must be return status 200', async () => {
     const res = await api.delete(`${url}/${id}`).set('Authorization', token)
@@ -62,10 +63,8 @@ describe('Testing Genres', () => {
     const res = await api
       .delete(`${url}/${genre._id}a`)
       .set('Authorization', token)
-    await expect(res.statusCode).to.equal(400)
-    await expect(res.body.msg).contain(
-      'La clave ingresada como parametro de busqueda no es valida.'
-    )
+    expect(res.statusCode).to.equal(400)
+    expect(res.body.msg[0]).contain('Validation Failed')
   })
   it('PUT one /genres/:id that no exist. Status Code 400 and msg with error by bad uuid', async () => {
     const newGenre = await createGenre()
@@ -73,13 +72,10 @@ describe('Testing Genres', () => {
     const res = await api
       .put(`${url}/${genre._id}a`)
       .set('Authorization', token)
-      .send({
-        name: 'Ciencia Ficcion'
-      })
+      .attach('image', 'tests/documental.jpg')
+      .field('name', 'CIENCIA FICCION')
     expect(res.statusCode).to.equal(400)
-    expect(res.body.msg).contain(
-      'La clave ingresada como parametro de busqueda no es valida.'
-    )
+    expect(res.body.msg[0]).contain('Validation Failed')
   })
   it('GET one /genres/:id that no exist. Status Code 400 and msg with error by bad uuid', async () => {
     const newGenre = await createGenre()
@@ -88,8 +84,6 @@ describe('Testing Genres', () => {
       .get(`${url}/${genre._id}a`)
       .set('Authorization', token)
     expect(res.statusCode).to.equal(400)
-    expect(res.body.msg).contain(
-      'La clave ingresada como parametro de busqueda no es valida.'
-    )
+    expect(res.body.msg[0]).contain('Validation Failed')
   })
 })
