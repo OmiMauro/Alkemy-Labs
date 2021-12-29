@@ -125,6 +125,7 @@ const addMovieToCharacter = async (req, res) => {
   if (!errors.isEmpty()) {
     throw new ValidateData('Validation Failed', errors.array())
   }
+
   const { userId: updatedBy } = req.user
   const { characterId } = req.params
   const { movieId } = req.body
@@ -138,7 +139,9 @@ const addMovieToCharacter = async (req, res) => {
     )
   }
   const character = await characterFind.addMovies(movieFind)
-  await characterFind.update({ updatedBy })
+  // const response = await characterFind.update({ updatedBy })
+  console.log(updatedBy)
+
   res.status(201).json({ character })
 }
 export {

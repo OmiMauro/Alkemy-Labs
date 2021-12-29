@@ -137,17 +137,21 @@ const addCharacterToMovie = async (req, res) => {
   const { movieId } = req.params
   const { characterId } = req.body
   const movieFind = await Movies.findByPk(movieId)
-  const character = await Character.findByPk(characterId)
 
-  if (!movieFind || !characterId) {
+  const characterFind = await Character.findByPk(characterId)
+
+  if (!movieFind || !characterFind) {
     throw new NotFound(
-      `No se encontró un ${movieFind ? 'a pelicula/serie' : ''}${
-        characterId ? 'personaje' : ''
+      `No se encontró un ${!movieFind ? 'a pelicula/serie' : ''}${
+        !characterFind ? 'personaje' : ''
       } con el id ingresado`
     )
   }
-  const movie = await movieFind.addCharacters(character)
+  console.log(movieFind, characterFind)
+  const movie = await movieFind.addCharacters(characterFind)
   await movieFind.update({ updatedBy })
+  console.log(movie)
+
   res.status(201).json({ movie })
 }
 
