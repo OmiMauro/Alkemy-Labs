@@ -11,8 +11,15 @@ const sequelize = new Sequelize(conecctionString, {
   logging: false,
   dialect: 'postgres',
   dialectOptions: {
-    ssl: true
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    },
+    keepAlive: true
   },
-  ssl: { rejectUnauthorized: false }
+  ssl: true,
+  define: {
+    timestamps: false
+  }
 })
 export default sequelize
