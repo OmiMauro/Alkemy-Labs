@@ -8,9 +8,7 @@ const conecctionString =
     : URI_DB_TEST
 
 const sequelize = new Sequelize(conecctionString, {
-  ssl: true,
-  dialectOptions: {
-    ssl: true
-  }
+  logging: false,
+  ssl: { rejectUnauthorized: false }
 })
 export default sequelize
