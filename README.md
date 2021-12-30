@@ -31,7 +31,7 @@ npm install
    
 ```sh
 PORT=
-URI_DB=dialect://user:password@host:port/name_db
+DATABASE_URL=dialect://user:password@host:port/name_db
 URI_DB_DEV=dialect://user:password@host:port/name_db_dev
 URI_DB_TEST=dialect://user:password@host:port/name_db_test
 SALT_ROUNDS=

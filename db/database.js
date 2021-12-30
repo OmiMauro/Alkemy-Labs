@@ -1,19 +1,16 @@
 import Sequelize from 'sequelize'
-const { URI_DB, URI_DB_TEST, NODE_ENV, URI_DB_DEV } = process.env
+const { DATABASE_URL, URI_DB_TEST, NODE_ENV, URI_DB_DEV } = process.env
 const conecctionString =
   NODE_ENV === 'production'
-    ? URI_DB
+    ? DATABASE_URL
     : NODE_ENV === 'development'
     ? URI_DB_DEV
     : URI_DB_TEST
 
 const sequelize = new Sequelize(conecctionString, {
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+  ssl: true,
+  dialectOptions: {
+    ssl: true
   }
 })
-
 export default sequelize
