@@ -50,10 +50,11 @@ HOST_MSG=smtp.ethereal.email
 npm run start
 ```
 
+
 ## Run tests
 
 ```sh
-npm run dev
+npm run test
 ```
 ### [Documentation with Postman](https://documenter.getpostman.com/view/12682963/UVRGEjXB#8ad72a62-4ea9-4bfa-8ec0-09c6aba6ab70)
 
