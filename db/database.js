@@ -9,6 +9,10 @@ const conecctionString =
 
 const sequelize = new Sequelize(conecctionString, {
   logging: false,
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: true
+  },
   ssl: { rejectUnauthorized: false }
 })
 export default sequelize
